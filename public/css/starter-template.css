@@ -1,0 +1,57 @@
+.starter-template {
+    padding: 100px 50px 50px 50px;
+}
+
+#tweets {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.media {
+    display: flex;
+    align-items: flex-start;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.media:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.media-left img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid #ddd;
+}
+
+.media-body {
+    flex: 1;
+}
+
+.media-heading {
+    font-size: 1.2rem;
+    margin: 0 0 5px;
+    color: #333;
+}
+
+.media-heading small {
+    font-size: 0.85rem;
+    color: #999;
+    margin-left: 10px;
+}
+
+.media-body p {
+    margin: 0;
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.4;
+}
