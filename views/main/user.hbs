@@ -2,10 +2,18 @@
   <div class="start-template">
     <h2>{{this.foundUser.name}}</h2>
     <img src="{{this.foundUser.photo}}" class="photo-size" />
-    <input type="hidden" id="user_id" value="{{this.foundUser._id}}">
-    <p>
-      <button class="btn btn-default" id="follow">Follow</button>
-    </p>
+    {{#if currentUser}}{{else}}
+      <input type="hidden" id="user_id" value="{{this.foundUser._id}}" />
+      {{#if isFollowing}}
+        <p>
+          <button class="btn btn-primary" id="unfollow">Following</button>
+        </p>
+      {{else}}
+        <p>
+          <button class="btn btn-default" id="follow">Follow</button>
+        </p>
+      {{/if}}
+    {{/if}}
   </div>
 
   <ul class="nav nav-tabs">

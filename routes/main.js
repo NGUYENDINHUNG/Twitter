@@ -29,18 +29,26 @@ router.get("/user/:id", async (req, res, next) => {
   try {
     const userId = req.params.id;
 
+    // Lấy dữ liệu song song
     const [tweets, foundUser] = await Promise.all([
       Tweet.find({ owner: userId }).populate("owner").sort("-created").lean(),
       User.findById(userId).populate("following").populate("followers").lean(),
     ]);
-
     if (!foundUser) {
       return res.status(404).send("User not found");
     }
+    const isFollowing = foundUser.followers.some((follower) =>
+      follower._id.equals(req.user._id)
+    );
+    // Kiểm tra user hiện tại có phải là chủ profile không
+    const currentUser = req.user._id.equals(foundUser._id);
+
     res.render("main/user", {
       tweets,
       user: req.user.toObject(),
       foundUser,
+      currentUser,
+      isFollowing,
     });
   } catch (err) {
     next(err);
@@ -67,6 +75,34 @@ router.post("/follow/:id", async (req, res, next) => {
     await User.updateOne(
       { _id: targetUserId, followers: { $ne: currentUserId } },
       { $push: { followers: currentUserId } }
+    );
+
+    res.status(200).json("Success");
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/unfollow/:id", async (req, res, next) => {
+  try {
+    const currentUserId = req.user._id;
+    const targetUserId = req.params.id;
+
+    // Đảm bảo không tự follow chính mình
+    if (currentUserId.toString() === targetUserId) {
+      return res.status(400).json({ message: "You cannot follow yourself." });
+    }
+
+    // Cập nhật user hiện tại: thêm người được f ollow nếu chưa có
+    await User.updateOne(
+      { _id: currentUserId },
+      { $pull: { following: targetUserId } }
+    );
+
+    // Cập nhật người được follow: thêm follower nếu chưa có
+    await User.updateOne(
+      { _id: targetUserId },
+      { $pull: { followers: currentUserId } }
     );
 
     res.status(200).json("Success");
